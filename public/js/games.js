@@ -68,7 +68,7 @@ $(".startGame").fadeIn(1000);
     
     // Get the generated pyramid and make it a collider
     function collide(nameCount){
-        cmd = "<Update><AnimalMover name='Roaming_collider" + nameCount + "' target='collider" + nameCount + "' linearSpeed='3' angularSpeed='20'/>";
+        cmd = "<Update><AnimalMover name='Roaming_collider" + nameCount + "' target='collider" + nameCount + "' linearSpeed='3' angularSpeed='30'/>";
         cmd += "<Set target='collider" + nameCount + "' detectCollision='" + true + "' detectObstruction='true'>";
         cmd += "</Set>"
         cmd += "</Update>";
