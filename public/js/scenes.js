@@ -66,6 +66,13 @@ function loadadventuretime() {
  bridgeworks.updateScene('AdventureTime.xml');
 }
 
+function loadbear() {
+ reset();
+ bridgeworks.contentDir='BwContent';
+ bridgeworks.onLoadModified();
+ bridgeworks.updateScene('Bear.xml');
+}
+
 function loadtwostroke() {
   reset();
   bridgeworks.contentDir='/BwContent/Engine/BwContent';

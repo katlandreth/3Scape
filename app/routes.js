@@ -70,6 +70,13 @@ module.exports = function(app, config) {
                 });
               }
               break;
+              case 'bear':
+              {
+                res.status(200).render('modeltest', {
+                  scape: s
+                });
+              }
+              break;
             default:
               {
                 return next('route');
