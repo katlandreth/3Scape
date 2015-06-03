@@ -3,22 +3,24 @@
 <?bwinclude url="DefaultPreferences.min.xml"?>
 <Scene>
   <Isolator name="Root">
-    <PerspectiveCamera name="Camera" zoom="1.2" nearDistance="1" farDistance="1000000">
+    <PerspectiveCamera name="Camera" zoom="2.2" nearDistance="1" farDistance="1000">
         <position x="0" y="150" z="-250"/>
         <rotation x="35" y="0" z="0"/>
     </PerspectiveCamera>
     <Group name="Lights">
-<!--
+
       <GlobalIllumination name="GlobalLight">
           <ambient r=".20" g=".20" b=".20"/>
       </GlobalIllumination>
--->
+
+
       <PointLight name="PointLight1" range="1025">
           <ambient r="0.35" g="0.35" b="0.45"/>
           <diffuse r=".55" g=".55" b=".55"/>
           <specular r=".75" g=".75" b=".75"/>
           <position x="50" y="450" z="-200"/>
       </PointLight>
+
 <!--
       <PointLight name="PointLight1" range="425">
           <ambient r="0.25" g="0.25" b="0.25"/>
@@ -30,32 +32,41 @@
     </Group>
     <Group name="Models">
       
-      <Model name="Ground" url="objects/mountain.lwo" moveable="false" opacity="1" selectable="true" physicsEnabled="true">
-        <scale x="50" y="50" z="50"/>
+    
+      <Model name="Ground" url="objects/Grid.lwo" moveable="false" detectCollision="true" physicsEnabled="true" opacity="1">
+          <scale x="50" y="1" z="50"/>
+          <position x="0" y="0" z="-10"/>
+          <physicalProperties>
+            <rollingFriction>0.0</rollingFriction>
+            <restitution>1.0</restitution>
+            <friction>1</friction>
+          </physicalProperties>
+      </Model>  
+      
+
+      <Model name="cow" url="animals/objects/cow.lwo" moveable="false" opacity="1" selectable="true" physicsEnabled="true">
+        <scale x="15" y="15" z="15"/>
         <position x="0" y="0" z="0"/>
-        <physicalProperties>
-          <mass>0</mass>
-        </physicalProperties>
-      </Model>
-      <Model name="ball" url="objects/sphere.lwo" moveable="false" opacity="1" selectable="true" physicsEnabled="true">
-        <scale x="5" y="5" z="5"/>
-        <position x="0" y="100" z="0"/>
+        <color r=".65" g=".05" b=".55" a="1"/>
         <physicalProperties>
           <mass>1</mass>
         </physicalProperties>
       </Model>
+
+      
 <!--
-      <Model name="Ground" url="objects/Grid.lwo" moveable="false" detectCollision="true" physicsEnabled="true" opacity="1">
-          <scale x="50" y="1" z="50"/>
-          
-          <position x="0" y="0" z="0"/>
-          <physicalProperties>
-            <rollingFriction>0.0</rollingFriction>
-            <restitution>1</restitution>
-            <friction>0.00025</friction>
-          </physicalProperties>
-      </Model>    
+            <Model name="cloud" url="objects/cloud.lwo" moveable="false" opacity="0.8" selectable="true" physicsEnabled="true">
+        <scale x="50" y="50" z="50"/>
+        <position x="0" y="100" z="0"/>
+        <physicalProperties>
+          <restitution>1</restitution>
+          <mass>1</mass>
+        </physicalProperties>
+      </Model>
+      
 -->
+
+
       <Isolator name="ScreenCaptureIsolator" isolateTextures="true">
         <MediaTexture name="ScreenCaptureTexture"/>
         <ScreenRect name="ScreenCaptureRect" enabled="false"/>
@@ -65,9 +76,11 @@
   </Isolator>
     <RenderDirective name="RenderDirective" highlightType="2" backgroundColor r="1" g="1" b="1" a="1" shadowsEnabled="false"/>
 
+<!--
     <Animations>
       <KeyframeInterpolator name="CameraMotion" url="motions/spin-mountain.mot" target="PointLight1" />
     </Animations>
+-->
 
     <ConnectOutputs sourceEvaluator="SceneInspector" targetContainer="Camera" connectionType="sceneInspection"/>
 

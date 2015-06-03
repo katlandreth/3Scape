@@ -16,7 +16,7 @@
 		<script type="text/javascript" src="js/eventHandlers.js"></script>
     <script type="text/javascript" src="js/tablet-resize.js" ></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
-    <script type="text/javascript" src="js/adventuretime.js" ></script>
+ 
 	</head>
 	<body class="container-fluid" onresize="resize();">
 
@@ -71,7 +71,8 @@
 						console.log(f);
 						eval(f);
 					<% } %>
-
+              document.onmousemove 	= handleDocMove;
+					document.onkeydown 		= handleKey;
 				}
 			}
 		</script>
@@ -83,6 +84,7 @@
 		<script type="text/javascript" src="js/MapControls.js"></script>
 		<script type="text/javascript" src="js/objectmode.js"></script>
     <script type="text/javascript" src="js/bootstrap-slider.js"></script>
+    <script type="text/javascript" src="js/cow.js" ></script>
 <!--    <script type="text/javascript" src="js/games.js"></script>-->
 	
 		<script type="text/javascript" src="js/slidemode.js"></script>
