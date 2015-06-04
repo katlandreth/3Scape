@@ -65,7 +65,8 @@ $(".startGame").fadeIn(1000);
           cmd += "<color r='0.55' g='0.025' b='0.30' a='1'/>";
           cmd += "<scale x='10' y='10' z='3' />";
           cmd += "<rotation x='90' y='0' z='0' />";
-          cmd += "<position x='" + xPos + "' y='0' z='" + zPos + "' />";  
+//          cmd += "<position x='" + xPos + "' y='0' z='" + zPos + "' />";  
+          cmd += "<position x='0' y='0' z='0' />"
           cmd += "<physicalProperties>";
           cmd += "<mass>0</mass>";
           cmd += "<friction>0.0</friction>";
@@ -78,8 +79,8 @@ $(".startGame").fadeIn(1000);
     
     // Get the cow and make it a collider
     function collide(){
-        cmd = "<Update><AnimalMover name='Roaming_cow' target='cow' linearSpeed='2' angularSpeed='25'/>";
-        cmd += "<Set target='cow' detectCollision='" + true + "' detectObstruction='true'>";
+        cmd = "<Update><AnimalMover name='Roaming_cow' target='cow' linearSpeed='1' angularSpeed='5'/>";
+        cmd += "<Set target='cow' detectCollision='" + true + "' detectObstruction='false'>";
         cmd += "</Set>"
         cmd += "</Update>";
       bridgeworks.updateScene(cmd);
@@ -89,35 +90,61 @@ $(".startGame").fadeIn(1000);
 
     
     
-    //Keep the Cow on the Grid
+    //Keep the Cow on the Grid & check the position of the trigger
     function checkXZ(part){
       var partToCheck = bridgeworks.get(part),
           sRot = partToCheck.rotation.getValueDirect(),
           positionXYZ = partToCheck.position.getValueDirect(),
           positionX = positionXYZ.x,
-          positionZ = positionXYZ.z;
-        console.log("checking position: " + positionX + " " + positionZ);
-      if (positionX > 85){
-        partToCheck.position.setValueDirect(positionXYZ.x-10, positionXYZ.y, positionXYZ.z);
-        partToCheck.rotation.setValueDirect(sRot.x, sRot.y+90, sRot.z);
+          positionZ = positionXYZ.z,
+          positionXZ = {x:positionX, z:positionZ};
+//        console.log("checking position: " + positionX + " " + positionZ);
+      if (part == "cow"){
+        if (positionX > 5){
+          partToCheck.position.setValueDirect(positionXYZ.x-5, positionXYZ.y, positionXYZ.z);
+          partToCheck.rotation.setValueDirect(sRot.x, sRot.y+90, sRot.z);
+        }
+        else if (positionX < -5){
+          partToCheck.position.setValueDirect(positionXYZ.x+5, positionXYZ.y, positionXYZ.z);
+          partToCheck.rotation.setValueDirect(sRot.x, sRot.y+90, sRot.z);
+        }
+        else if (positionZ > 5){
+          partToCheck.position.setValueDirect(positionXYZ.x, positionXYZ.y, positionXYZ.z-5);
+          partToCheck.rotation.setValueDirect(sRot.x, sRot.y+90, sRot.z);
+        }
+
+        else if (positionZ < -5){
+          partToCheck.position.setValueDirect(positionXYZ.x, positionXYZ.y, positionXYZ.z+5);
+          partToCheck.rotation.setValueDirect(sRot.x, sRot.y+90, sRot.z);
+        }
+        return positionXZ;
       }
-      else if (positionX < -85){
-        partToCheck.position.setValueDirect(positionXYZ.x+10, positionXYZ.y, positionXYZ.z);
-        partToCheck.rotation.setValueDirect(sRot.x, sRot.y+90, sRot.z);
-      }
-      else if (positionZ > 85){
-        partToCheck.position.setValueDirect(positionXYZ.x, positionXYZ.y, positionXYZ.z-10);
-        partToCheck.rotation.setValueDirect(sRot.x, sRot.y+90, sRot.z);
-      }
-      
-      else if (positionZ < -85){
-       partToCheck.position.setValueDirect(positionXYZ.x, positionXYZ.y, positionXYZ.z+10);
-        partToCheck.rotation.setValueDirect(sRot.x, sRot.y+90, sRot.z);
+      else if (part == "trigger"){
+        return positionXZ;
       }
     };
     
+    var triggerPosition = checkXZ("trigger");
+    console.log("trigger position " + triggerPosition);
+    var triggerArray = [];
+    
     var checkColliders = setInterval(function(){
-      checkXZ("cow");
+      var currentCow = checkXZ("cow");
+      
+      console.log(currentCow);
+    //  console.log("trigger position " + triggerPosition.x + " trigger possition plus five " + (triggerPosition.x + 5));
+      if ( (triggerPosition.x + 15) >= currentCow.x && currentCow.x >= (triggerPosition.x - 15) && (triggerPosition.z + 15) >= currentCow.z && currentCow.z >= (triggerPosition.z - 15) ) {
+        console.log("#1 trigger!");
+        if ( triggerArray.length == 3 ){
+          console.log("!!!!!!WINNER!!!!!!");
+          winGame();
+        }
+        triggerArray.push("trigger");
+        }
+      else {
+        console.log("cow not on trigger");
+        triggerArray = [];
+      }
     }, 1000);
     
  
@@ -129,7 +156,7 @@ $(".startGame").fadeIn(1000);
     }, 1000);
     
     function winGame(){
-      clearInterval(handle);
+      clearInterval(checkColliders);
       clearInterval(checkTime);
       bridgeworks.contentDir = '/BwContent';
       bridgeworks.onLoadModified();
