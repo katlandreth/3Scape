@@ -71,6 +71,7 @@ module.exports = function(app, config) {
               }
               break;
               case 'bear':
+              case 'cow':
               {
                 res.status(200).render('modeltest', {
                   scape: s

@@ -40,7 +40,7 @@ $(".startGame").fadeIn(1000);
       digits.s1.attr('class', digit_to_name[formatted[2]]);
       digits.s2.attr('class', digit_to_name[formatted[3]]);
       now = now.add(1, 's');
-//      checkTime();
+      checkTime();
     };
     handle = setInterval(update_time, 1000);
   };
@@ -51,22 +51,32 @@ $(".startGame").fadeIn(1000);
   function startGame(){
     var allColliders = [];
     var count = 0;
+    
+    //Generate a random number - used in random positioning of jewel and colliders
+    function randomNumber(){
+      var num = Math.floor(Math.random()*75) + 1; 
+      num *= Math.floor(Math.random()*2) == 1 ? 1 : -1; 
+      return num;
+    };
 
-    function makeJewel(xPos, zPos){
-      var cmd =  "<Model name='jewel' url='objects/jewel.lwo' moveable='false' opacity='1' selectable='false' physicsEnabled='true' detectCollision='true'>";
+
+    function makeTrigger(xPos, zPos){
+      var cmd =  "<Model name='trigger' url='objects/wall.lwo' moveable='false' opacity='1' selectable='false' physicsEnabled='true' detectCollision='true'>";
           cmd += "<color r='0.55' g='0.025' b='0.30' a='1'/>";
-          cmd += "<scale x='10' y='10' z='10' />";
-          cmd += "<rotation x='45' y='150.0' z='0' />";
-          cmd += "<position x='" + xPos + "' y='25' z='" + zPos + "' />";  
+          cmd += "<scale x='10' y='10' z='3' />";
+          cmd += "<rotation x='90' y='0' z='0' />";
+          cmd += "<position x='" + xPos + "' y='0' z='" + zPos + "' />";  
           cmd += "<physicalProperties>";
-          cmd += "<mass>0.5</mass>";
+          cmd += "<mass>0</mass>";
           cmd += "<friction>0.0</friction>";
           cmd += "</physicalProperties>";
           cmd += "</Model>";
       bridgeworks.updateScene(cmd);
     }
     
-    // Get the generated pyramid and make it a collider
+    makeTrigger(randomNumber(), randomNumber());
+    
+    // Get the cow and make it a collider
     function collide(){
         cmd = "<Update><AnimalMover name='Roaming_cow' target='cow' linearSpeed='2' angularSpeed='25'/>";
         cmd += "<Set target='cow' detectCollision='" + true + "' detectObstruction='true'>";
@@ -74,49 +84,12 @@ $(".startGame").fadeIn(1000);
         cmd += "</Update>";
       bridgeworks.updateScene(cmd);
     }
-
-    //Make a pyramid with a unique name - push it into the allColliders array
-//    function makeCollider(nameCount, xPos, zPos){
-//      var colliderName = "collider" + nameCount;
-//      var cmd =  "<Model name='" + colliderName + "' url='objects/pyramid.lwo' moveable='true' opacity='1' selectable='false' physicsEnabled='true' detectCollision='true'>";
-//          cmd += "<color r='0.1' g='0.1' b='0.1' a='1'/>";
-//          cmd += "<scale x='8' y='8' z='8' />"; 
-//          cmd += "<position x='" + xPos + "' y='10' z='" + zPos + "' />";  
-//          cmd += "<physicalProperties>";
-//          cmd += "<mass>5</mass>";
-//          cmd += "</physicalProperties>";
-//          cmd += "</Model>";
-//      bridgeworks.updateScene(cmd);
-      collide();
-//      allColliders.push(colliderName);
-//    }
     
-    //Generate a random number - used in random positioning of jewel and colliders
-    function randomNumber(){
-      var num = Math.floor(Math.random()*25) + 1; 
-      num *= Math.floor(Math.random()*2) == 1 ? 1 : -1; 
-      return num;
-    };
+    collide();
 
-    //Place the jewel at at random position, place one collider at a random position approx every 7 seconds
-//    makeJewel(randomNumber(), randomNumber());
-//    
-//    var placeColliders = setInterval(function(){
-//      var randomX = randomNumber(),
-//          randomZ = randomNumber();
-//      count = count + 1;
-//      makeCollider(count, randomX, randomZ);
-//    }, 7000);
-
-    //Check the given parts Y position
-//    function checkY(partY){
-//      var partToCheck = bridgeworks.get(partY),
-//          positionXYZ = partToCheck.position.getValueDirect(),
-//          positionY = positionXYZ.y;
-//      return positionY;
-//    };
     
-     //Check the given parts Y position
+    
+    //Keep the Cow on the Grid
     function checkXZ(part){
       var partToCheck = bridgeworks.get(part),
           sRot = partToCheck.rotation.getValueDirect(),
@@ -147,30 +120,7 @@ $(".startGame").fadeIn(1000);
       checkXZ("cow");
     }, 1000);
     
-    //Use CheckY to see if colliders or the jewel have gone over the edge
-//    var checkColliders = setInterval(function(){
-//      for (i=0; i < allColliders.length; i++){
-//        if ( checkY(allColliders[i]) < 0 ){
-//          var c = "\<Remove target='" + allColliders[i] + "'/>"
-//          bridgeworks.updateScene(c);
-//          allColliders.splice(i, 1);
-//        }
-//      };
-      
-      //Lose Game
-//      if ( checkY("jewel") < 0 ){
-//          $(".loseMessage").fadeIn(1000);
-//          $(".loseMessage").addClass("lose");
-//          stopColliders();
-//          clearInterval(handle);
-//        }
-//    }, 7000);
-    
-    //Stop placing colliders
-    function stopColliders(){
-      window.clearInterval(placeColliders);
-    };
-    
+ 
     var checkTime = setInterval (function checkTime(){
       if ( $(".digits div:nth-child(2)").hasClass("two")){
         console.log("two minutes!");
@@ -180,8 +130,6 @@ $(".startGame").fadeIn(1000);
     
     function winGame(){
       clearInterval(handle);
-      clearInterval(placeColliders);
-      clearInterval(checkColliders);
       clearInterval(checkTime);
       bridgeworks.contentDir = '/BwContent';
       bridgeworks.onLoadModified();

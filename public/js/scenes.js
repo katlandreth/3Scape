@@ -73,6 +73,13 @@ function loadbear() {
  bridgeworks.updateScene('Bear.xml');
 }
 
+function loadcow() {
+ reset();
+ bridgeworks.contentDir='BwContent';
+ bridgeworks.onLoadModified();
+ bridgeworks.updateScene('cow.xml');
+}
+
 function loadtwostroke() {
   reset();
   bridgeworks.contentDir='/BwContent/Engine/BwContent';
